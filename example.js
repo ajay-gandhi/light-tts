@@ -1,7 +1,10 @@
 
-var google_tts = require('./index.js');
+var GoogleTTS = require('./index.js');
 
-google_tts.convert('hello world', 'sample.mp3', function () {
+GoogleTTS.convert('hello world', 'sample', function () {
   console.log('look at sample.mp3');
 });
 
+GoogleTTS.play('hello world this is a lot of text', function () {
+  console.log('Done speaking!');
+});

@@ -1,10 +1,12 @@
 {
   "name": "google-tts",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Wrapper for Google text to speech",
   "main": "index.js",
   "dependencies": {
-    "request": "^2.60.0"
+    "lame": "^1.2.2",
+    "request": "^2.60.0",
+    "speaker": "^0.2.5"
   },
   "devDependencies": {},
   "scripts": {
