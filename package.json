@@ -1,0 +1,28 @@
+{
+  "name": "google-tts",
+  "version": "1.0.0",
+  "description": "Wrapper for Google text to speech",
+  "main": "index.js",
+  "dependencies": {
+    "request": "^2.60.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ajay-gandhi/google-tts"
+  },
+  "keywords": [
+    "text",
+    "speech",
+    "google"
+  ],
+  "author": "Ajay Gandhi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajay-gandhi/google-tts/issues"
+  },
+  "homepage": "https://github.com/ajay-gandhi/google-tts"
+}
