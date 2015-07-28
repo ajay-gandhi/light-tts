@@ -17,7 +17,11 @@ module.exports.convert = function (text, filename, callback) {
   var mp3_file = fs.createWriteStream(mp3File);
 
   // Make API request
-  request.get(options)
+  request
+    .get(options)
+    .on('error', function (err) {
+      console.log(err)
+    })
     .on('data', function (data) {
       mp3_file.write(data);
     })
@@ -37,9 +41,16 @@ module.exports.play = function (text, callback) {
   // Pipe to Lame to convert to PCM, then pipe to speakers
   request
     .get(options)
+    .on('error', function (err) {
+      console.log(err)
+    })
     .pipe(new Lame.Decoder())
     .on('format', function (format) {
       var playing = this.pipe(new Speaker(format));
+
+      playing.on('error', function (err) {
+        console.log(err);
+      });
 
       playing.on('finish', function () { 
         if (callback) callback();
