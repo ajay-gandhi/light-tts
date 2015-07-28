@@ -9,7 +9,7 @@ var api_url = 'http://translate.google.com/translate_tts?tl=en&q=';
 module.exports.convert = function (text, filename, callback) {
   // Form the URL
   var options = {
-    url: api_url + text
+    url: api_url + escape(text)
   }
 
   // File to save audio to
@@ -35,7 +35,7 @@ module.exports.convert = function (text, filename, callback) {
 module.exports.play = function (text, callback) {
   // Form the URL
   var options = {
-    url: api_url + text
+    url: api_url + escape(text)
   }
 
   // Pipe to Lame to convert to PCM, then pipe to speakers
