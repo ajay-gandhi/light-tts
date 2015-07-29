@@ -4,9 +4,25 @@ var request = require('request'),
     Lame    = require('lame'),
     Speaker = require('speaker');
 
-var api_url = 'http://translate.google.com/translate_tts?tl=en&q=';
+// Default api is Google
+var apis = {
+  google:  'http://translate.google.com/translate_tts?tl=en&q=',
+  tts_api: 'http://tts-api.com/tts.mp3?q='
+}
 
-module.exports.convert = function (text, filename, callback) {
+var api_url = apis.google;
+
+/**
+ * Selects a TTS API
+ */
+module.exports.select_api = function (api_name) {
+  if (apis[api_name]) api_url = apis[api_name];
+}
+
+/**
+ * Converts provided text to speech and saves as the given file
+ */
+module.exports.save = function (text, filename, callback) {
   // Form the URL
   var options = {
     url: api_url + escape(text)
@@ -20,7 +36,7 @@ module.exports.convert = function (text, filename, callback) {
   request
     .get(options)
     .on('error', function (err) {
-      console.log(err)
+      console.log(err);
     })
     .on('data', function (data) {
       mp3_file.write(data);
@@ -32,7 +48,10 @@ module.exports.convert = function (text, filename, callback) {
     });
 }
 
-module.exports.play = function (text, callback) {
+/**
+ * Converts the given text to speech and plays it
+ */
+module.exports.say = function (text, callback) {
   // Form the URL
   var options = {
     url: api_url + escape(text)

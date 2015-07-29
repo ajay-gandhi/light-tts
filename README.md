@@ -1,27 +1,34 @@
-# google-tts
+# light-tts
 
-A Node.js module for text-to-speech conversion using Google's TTS API.
+A lightweight text-to-speech module for Node.js
 
 ## Installation
 
-    $ npm install google-tts
+    $ npm install light-tts
 
 ## Usage
 
-You can either play the received speech directly or save it to a file:
+You can either save the 
 
 ```js
-var GoogleTTS = require('google-tts');
+var LightTTS = require('light-tts');
 
 // Play the received speech
-GoogleTTS.play(text[, callback]);
+LightTTS.say(text[, callback]);
 
 // Save the received speech into an mp3 file
-GoogleTTS.convert(text, filename[, callback]);
+LightTTS.save(text, filename[, callback]); // .mp3 extension added automatically
+```
+
+You can choose between two TTS APIs: `google` and `tts_api`, with Google being
+the default. To select one or another:
+
+```js
+LightTTS.select_api('tts_api'); // Use 'google' to switch to Google TTS
 ```
 
 The callback functions are run after the speech is finished playing or the file
-is completely written, respectively.
+is completely written.
 
-Note that the `.mp3` extension is added automatically to `filename` for safety.
+__Coming soon:__ More error handling, catching missing arguments cleanly
 
