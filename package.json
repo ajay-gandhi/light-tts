@@ -1,6 +1,6 @@
 {
   "name": "light-tts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Lightweight text to speech",
   "main": "index.js",
   "dependencies": {
