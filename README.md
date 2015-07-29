@@ -8,7 +8,7 @@ A lightweight text-to-speech module for Node.js
 
 ## Usage
 
-You can either save the 
+You can either save the audio as an mp3 file or speak it directly: 
 
 ```js
 var LightTTS = require('light-tts');
