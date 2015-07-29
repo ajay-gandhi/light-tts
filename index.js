@@ -16,6 +16,9 @@ var api_url = apis.google;
  * Selects a TTS API
  */
 module.exports.select_api = function (api_name) {
+  // Ensure arg
+  if (!api_name) return console.log('Missing "api_name" parameter');
+
   if (apis[api_name]) api_url = apis[api_name];
 }
 
@@ -23,6 +26,10 @@ module.exports.select_api = function (api_name) {
  * Converts provided text to speech and saves as the given file
  */
 module.exports.save = function (text, filename, callback) {
+  // Ensure args
+  if (!text)     return console.log('Missing "text" parameter');
+  if (!filename) return console.log('Missing "filename" parameter');
+
   // Form the URL
   var options = {
     url: api_url + escape(text)
@@ -52,6 +59,9 @@ module.exports.save = function (text, filename, callback) {
  * Converts the given text to speech and plays it
  */
 module.exports.say = function (text, callback) {
+  // Ensure args
+  if (!text) return console.log('Missing "text" parameter');
+
   // Form the URL
   var options = {
     url: api_url + escape(text)
@@ -61,7 +71,7 @@ module.exports.say = function (text, callback) {
   request
     .get(options)
     .on('error', function (err) {
-      console.log(err)
+      console.log(err);
     })
     .pipe(new Lame.Decoder())
     .on('format', function (format) {

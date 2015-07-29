@@ -29,6 +29,3 @@ LightTTS.select_api('tts_api'); // Use 'google' to switch to Google TTS
 
 The callback functions are run after the speech is finished playing or the file
 is completely written.
-
-__Coming soon:__ More error handling, catching missing arguments cleanly
-
