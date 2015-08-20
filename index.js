@@ -2,87 +2,110 @@
 var request = require('request'),
     fs      = require('fs'),
     Lame    = require('lame'),
-    Speaker = require('speaker');
+    Speaker = require('speaker'),
+    qs      = require('querystring');
 
-// Default api is Google
-var apis = {
-  google:  'http://translate.google.com/translate_tts?tl=en&q=',
-  tts_api: 'http://tts-api.com/tts.mp3?q='
-}
+module.exports = (function () {
 
-var api_url = apis.google;
+  function LightTTS() {
+    this.apis = {
+      google:  'http://translate.google.com/translate_tts?',
+      tts_api: 'http://tts-api.com/tts.mp3?'
+    }
 
-/**
- * Selects a TTS API
- */
-module.exports.select_api = function (api_name) {
-  // Ensure arg
-  if (!api_name) return console.log('Missing "api_name" parameter');
+    // Default api is Google
+    this.api_url = apis.google;
 
-  if (apis[api_name]) api_url = apis[api_name];
-}
-
-/**
- * Converts provided text to speech and saves as the given file
- */
-module.exports.save = function (text, filename, callback) {
-  // Ensure args
-  if (!text)     return console.log('Missing "text" parameter');
-  if (!filename) return console.log('Missing "filename" parameter');
-
-  // Form the URL
-  var options = {
-    url: api_url + escape(text)
+    // Default langauage is english
+    this.args = {
+      text: '',
+      tl: 'en'
+    }
   }
 
-  // File to save audio to
-  var mp3File  = filename + '.mp3';
-  var mp3_file = fs.createWriteStream(mp3File);
+  /**
+   * Set TTS options
+   */
+  module.exports.set_opts = function (opts) {
+    if (opts.api_name && this.apis[opts.api_name])
+      this.api_url = this.pis[opts.api_name];
 
-  // Make API request
-  request
-    .get(options)
-    .on('error', function (err) {
-      console.log(err);
-    })
-    .on('data', function (data) {
-      mp3_file.write(data);
-    })
-    .on('end', function(){
-      mp3_file.end();
-
-      if (callback) callback();
-    });
-}
-
-/**
- * Converts the given text to speech and plays it
- */
-module.exports.say = function (text, callback) {
-  // Ensure args
-  if (!text) return console.log('Missing "text" parameter');
-
-  // Form the URL
-  var options = {
-    url: api_url + escape(text)
+    // Only Google supports languages
+    if (opts.lang) {
+      if (this.api_url === this.apis.google) this.args.tl = opts.lang;
+      else console.log('Only Google TTS supports additional languages');
+    }
   }
 
-  // Pipe to Lame to convert to PCM, then pipe to speakers
-  request
-    .get(options)
-    .on('error', function (err) {
-      console.log(err);
-    })
-    .pipe(new Lame.Decoder())
-    .on('format', function (format) {
-      var playing = this.pipe(new Speaker(format));
+  /**
+   * Converts provided text to speech and saves as the given file
+   */
+  LightTTS.prototype.save = function (text, filename, callback) {
+    // Ensure args
+    if (!text)     return console.log('Missing "text" parameter');
+    if (!filename) return console.log('Missing "filename" parameter');
 
-      playing.on('error', function (err) {
+    this.args.text = text;
+
+    // Form the URL
+    var options = {
+      url: api_url + qs.stringify(this.args)
+    }
+
+    // File to save audio to
+    var mp3File  = filename + '.mp3';
+    var mp3_file = fs.createWriteStream(mp3File);
+
+    // Make API request
+    request
+      .get(options)
+      .on('error', function (err) {
         console.log(err);
-      });
+      })
+      .on('data', function (data) {
+        mp3_file.write(data);
+      })
+      .on('end', function(){
+        mp3_file.end();
 
-      playing.on('finish', function () { 
         if (callback) callback();
       });
-    });
-}
+  }
+
+  /**
+   * Converts the given text to speech and plays it
+   */
+  LightTTS.prototype.say = function (text, callback) {
+    // Ensure args
+    if (!text) return console.log('Missing "text" parameter');
+
+    this.args.text = text;
+
+    // Form the URL
+    var options = {
+      url: api_url + qs.stringify(this.args)
+    }
+
+    // Pipe to Lame to convert to PCM, then pipe to speakers
+    request
+      .get(options)
+      .on('error', function (err) {
+        console.log(err);
+      })
+      .pipe(new Lame.Decoder())
+      .on('format', function (format) {
+        var playing = this.pipe(new Speaker(format));
+
+        playing.on('error', function (err) {
+          console.log(err);
+        });
+
+        playing.on('finish', function () { 
+          if (callback) callback();
+        });
+      });
+  }
+
+  return new LightTTS();
+
+})();

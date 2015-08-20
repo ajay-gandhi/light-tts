@@ -20,12 +20,24 @@ LightTTS.say(text[, callback]);
 LightTTS.save(text, filename[, callback]); // .mp3 extension added automatically
 ```
 
-You can choose between two TTS APIs: `google` and `tts_api`, with Google being
-the default. To select one or another:
-
-```js
-LightTTS.select_api('tts_api'); // Use 'google' to switch to Google TTS
-```
-
 The callback functions are run after the speech is finished playing or the file
 is completely written.
+
+## Options
+
+Here is a short list of the possible options:
+
+* `api_name` - Choose which API to use: `google` or `tts_api`. `google` is the
+               default
+* `lang` - Choose which language to use. Only the `google` APi supports this
+           option
+
+To set new options:
+
+```js
+// Switch to Spanish
+LightTTS.set_opts({
+  api_name: 'google',
+  lang: 'es'
+});
+```
